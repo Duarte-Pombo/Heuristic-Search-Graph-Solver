@@ -1,4 +1,3 @@
-```markdown
 # Self-driving rides
 
 Problem statement for the Online Qualification Round of Hash Code 2018
@@ -173,4 +172,3 @@ For example, with the example input file and the example submission file above, 
 The total score for this submission is `6 + 2 + 2 = 10`.
 
 Note that there are multiple data sets representing separate instances of the problem. The final score for your team will be the sum of your best scores on the individual data sets.
-```
