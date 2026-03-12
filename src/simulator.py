@@ -2,16 +2,6 @@
 Executes rides and computes scores.
 """
 
-
-class Vehicle:
-    def __init__(self, vehicle_id):
-        self.id = vehicle_id
-        self.position = (0, 0)
-        self.current_time = 0
-        self.rides = []
-        self.score = 0
-
-
 def manhattan_distance(pos1, pos2):
     """Calculate Manhattan distance between two positions."""
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
