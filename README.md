@@ -1,4 +1,14 @@
-# Self-driving rides
+# Metaheuristics for Optimization/Decision Problems
+
+An optimization problem is characterized by the existence of a (typically large) set of possible solutions, comparable to each other, of which one or more are considered (globally) optimal solutions. Depending on the specific problem, an evaluation function allows you to establish this comparison between solutions. In many of these problems, it is virtually impossible to find the optimal solution or to ensure that the solution found is globally optimal. As such, the goal is to try to find a locally optimal solution that maximizes/minimizes a given evaluation function to the extent possible.
+
+In this work, the aim is to implement a system to solve an optimization problem, using different algorithms or meta-heuristics, such as hill-climbing, simulated annealing, and genetic algorithms. Other algorithms or variations of these algorithms may also be included. Multiple instances with different sizes of the chosen problem should be solved, and the results obtained by each algorithm should be compared. Different parameterizations of the algorithms should be tested and compared, in terms of the average quality of the solution obtained and the average time spent to obtain the solutions. The program should be able to read the problems from text files and store the results also in text files, comparing the different algorithms.
+
+Students should focus on firstly developing a simple version of the program with small problem instances, employing simpler algorithms, and ensuring that they are able to approach these simple problem instances before proceeding to more complex ones.
+
+The application should have an appropriate graphical user interface to show the evolution of the solutions and their quality. The application should also enable the analysis of the final (i.e., locally optimal) solution(s) and interact with the user. You should provide in the interface means for the selection and parameterization of the algorithms and the selection of the instance of the problem to be solved.
+
+# Problem: Self-driving rides
 
 Problem statement for the Online Qualification Round of Hash Code 2018
 
@@ -172,3 +182,4 @@ For example, with the example input file and the example submission file above, 
 The total score for this submission is `6 + 2 + 2 = 10`.
 
 Note that there are multiple data sets representing separate instances of the problem. The final score for your team will be the sum of your best scores on the individual data sets.
+
