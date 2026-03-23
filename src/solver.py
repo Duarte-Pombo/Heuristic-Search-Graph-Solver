@@ -8,53 +8,78 @@ import random
 import math
 import copy
 
-def mutate_assignment(assignment, num_vehicles):
+
+def mutate_assignment(assignment, problem):
     """
-    Neighborhood Function: Creates a neighboring solution by mutating the current one.
-    It randomly chooses to either 'shift' a ride to another vehicle, or 'swap' two rides.
+    problem: The Problem object containing the list of Ride objects
+    assignment: The current dict of {vehicle_id: [ride_ids]}
     """
-    new_assignment = copy.deepcopy(assignment)
 
-    active_vehicles = [v for v, rides in new_assignment.items() if len(rides) > 0]
-    if not active_vehicles:
-        return new_assignment
+    # Helper to sort by the ride's earliest start time
+    def sort_rides(ride_list):
+        # We look up the ride data using the ride_id from problem.rides
+        ride_list.sort(key=lambda r_id: problem.rides[r_id].earliest_start)
 
-    mutation_type = random.choice(['shift', 'swap'])
+    v_ids = list(assignment.keys())
+    active_vehicles = [v for v in v_ids if assignment[v]]
+    inactive_vehicles = [v for v in v_ids if not assignment[v]]
+    n_in = len(inactive_vehicles)
 
-    if mutation_type == 'shift':
-        # Take a ride from a random active vehicle and give it to any vehicle
+    # Shallow copy for speed
+    new_assignment = assignment.copy()
+    mutation_type = random.choice(['shift', 'swap', 'tail_shift'])
+
+    if mutation_type == 'shift' and active_vehicles:
         v_from = random.choice(active_vehicles)
-        v_to = random.choice(range(num_vehicles))
+        v_to = random.choice(inactive_vehicles) if (inactive_vehicles and random.random() < 0.5) else random.choice(
+            v_ids)
 
-        if new_assignment[v_from]:
-            # Pop a random ride from the source vehicle
-            ride_idx = random.randrange(len(new_assignment[v_from]))
-            ride = new_assignment[v_from].pop(ride_idx)
+        if v_from == v_to: return new_assignment, n_in
 
-            # Generate all valid insertion indices
-            possible_insertions = list(range(len(new_assignment[v_to]) + 1))
+        list_from, list_to = list(new_assignment[v_from]), list(new_assignment[v_to])
+        ride = list_from.pop(random.randrange(len(list_from)))
 
-            # If it's the same car, the ride can not be placed in the same spot it came from
-            if v_from == v_to and len(possible_insertions) > 1:
-                possible_insertions.remove(ride_idx)
+        list_to.append(ride)
+        sort_rides(list_to)  # Puts the ride in the best chronological spot
 
-            # Insert it at a random valid position
-            insert_idx = random.choice(possible_insertions)
-            new_assignment[v_to].insert(insert_idx, ride)
+        new_assignment[v_from], new_assignment[v_to] = list_from, list_to
 
-    elif mutation_type == 'swap':
-        # Exchange two rides between two different active vehicles
-        if len(active_vehicles) >= 2:
-            v1, v2 = random.sample(active_vehicles, 2)
-            if new_assignment[v1] and new_assignment[v2]:
-                idx1 = random.randrange(len(new_assignment[v1]))
-                idx2 = random.randrange(len(new_assignment[v2]))
+    elif mutation_type == 'tail_shift' and active_vehicles:
+        v_from = random.choice(active_vehicles)
+        v_to = random.choice(inactive_vehicles) if inactive_vehicles else random.choice(v_ids)
+        if v_from == v_to: return new_assignment, n_in
 
-                # Swap the rides
-                new_assignment[v1][idx1], new_assignment[v2][idx2] = new_assignment[v2][idx2], new_assignment[v1][idx1]
+        list_from, list_to = list(new_assignment[v_from]), list(new_assignment[v_to])
+        idx = random.randrange(len(list_from))
 
-    return new_assignment
+        list_to.extend(list_from[idx:])
+        new_list_from = list_from[:idx]
 
+        sort_rides(list_to)  # Re-order the entire chain for the new car
+        new_assignment[v_from], new_assignment[v_to] = new_list_from, list_to
+
+    elif mutation_type == 'swap' and active_vehicles:
+        v1 = random.choice(active_vehicles)
+        v2 = random.choice(v_ids)
+        if v1 == v2: return new_assignment, n_in
+
+        list1, list2 = list(new_assignment[v1]), list(new_assignment[v2])
+
+        # Take a ride from V1
+        ride1 = list1.pop(random.randrange(len(list1)))
+
+        if list2:
+            # Swap with a ride from V2
+            ride2 = list2.pop(random.randrange(len(list2)))
+            list1.append(ride2)
+            sort_rides(list1)
+
+        list2.append(ride1)
+        sort_rides(list2)
+
+        new_assignment[v1], new_assignment[v2] = list1, list2
+
+    return new_assignment, n_in
 
 def simulated_annealing_solver(problem):
     """
@@ -65,6 +90,7 @@ def simulated_annealing_solver(problem):
     # 1. Initial State: Start with your fast greedy solver
     current_assignment_greedy = greedy_solver(problem)
     current_score_greedy, _ = simulate_assignment(problem, current_assignment_greedy)
+    #current_score_greedy = 0
 
     print("Generating initial nearest assignment...\n")
     # 1. Initial State: Start with your fast greedy solver
@@ -83,11 +109,8 @@ def simulated_annealing_solver(problem):
 
     current_assignment = copy.deepcopy(best_assignment)
     current_score = best_score
+    starting_score = best_score
 
-
-    # ==========================================
-    # 4. DYNAMIC HYPERPARAMETERS
-    # ==========================================
     # Scale iterations based on dataset size (min 2000, max 100k)
     max_iter = max(2000, min(100000, problem.num_rides * 10))
 
@@ -108,12 +131,17 @@ def simulated_annealing_solver(problem):
     temp = initial_temp
     print(f"\nStarting Simulated Annealing (Initial Score: {best_score})")
 
+    last_upgrade = 0
+    inactive_vehicles = [v for v, rides in current_assignment.items() if len(rides) == 0]
+    n_in = len(inactive_vehicles)
+    n_in_start = n_in
+
     for i in range(max_iter):
         if temp <= min_temp:
             break
 
         # Get a mutated neighbor
-        neighbor_assignment = mutate_assignment(current_assignment, problem.fleet_size)
+        neighbor_assignment, n_in = mutate_assignment(current_assignment, problem)
 
         # Calculate the new score and the score difference
         neighbor_score, _ = simulate_assignment(problem, neighbor_assignment)
@@ -128,8 +156,9 @@ def simulated_annealing_solver(problem):
             if current_score > best_score:
                 best_score = current_score
                 best_assignment = copy.deepcopy(current_assignment)
+                last_upgrade = -1
                 # Can be uncommented to properly display algorithm behavior, generates unnecessary prints
-                print(f"Iteration {i}: New Best Score -> {best_score}")
+                #print(f"Iteration {i}: New Best Score -> {best_score}")
 
         else:
             # Worse solution. Calculate probability of accepting it anyway.
@@ -141,12 +170,20 @@ def simulated_annealing_solver(problem):
                 current_score = neighbor_score
 
                 # This generates too many prints, can be uncommented to display that the algorithm actually considers the worse solutions
-                # print(f"Iteration {i}: Accepted WORSE score -> {current_score} (Temp: {temp:.2f})")
+                #print(f"Iteration {i}: Accepted WORSE score -> {current_score} (Temp: {temp:.2f})")
 
         # Decrease the temperature
         temp *= cooling_rate
 
-    print(f"Finished Simulated Annealing. Final Best Score: {best_score}")
+        last_upgrade += 1
+
+    print(f"\nFinished Simulated Annealing. Final Best Score: {best_score}")
+
+    improvement = best_score - starting_score
+    improv_percent = (improvement/starting_score) * 100
+    print(f"Score grew by {improv_percent:.2f}% from {starting_score} to {best_score}")
+    print(f"Scored last improved {last_upgrade} iterations ago")
+    print(f"Inactive vehicles left: {n_in} from {n_in_start}")
     return best_assignment
 
 

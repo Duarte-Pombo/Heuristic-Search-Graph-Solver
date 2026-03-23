@@ -1,0 +1,106 @@
+========================================
+NEW RUN: 2026-03-23 08:43:21
+DATASET: input/medium.txt
+========================================
+Parsed: 15 rides, 3 vehicles
+Grid: 50x50, Time: 500 steps, Bonus: 100
+Generating initial greedy assignment...
+Generating initial nearest assignment...
+
+Greedy provided the initial best score.
+
+--- Dynamic SA Parameters ---
+Iterations:   2000
+Initial Temp: 1000.0
+Cooling Rate: 0.995405
+-----------------------------
+
+Starting Simulated Annealing (Initial Score: 1255)
+Iteration 708: New Best Score -> 1319
+Iteration 779: New Best Score -> 1405
+Iteration 827: New Best Score -> 1415
+Iteration 934: New Best Score -> 1435
+Iteration 1320: New Best Score -> 1453
+Iteration 1354: New Best Score -> 1553
+Iteration 1478: New Best Score -> 1555
+Finished Simulated Annealing. Final Best Score: 1555
+
+Assignment: annealing solver
+Total score: 1555
+  Vehicle 0: 5 rides, score: 422
+  Vehicle 1: 4 rides, score: 518
+  Vehicle 2: 6 rides, score: 615
+
+Solution written to output/medium_annealing.txt
+
+========================================
+NEW RUN: 2026-03-23 09:03:49
+DATASET: input/medium.txt
+========================================
+Parsed: 15 rides, 3 vehicles
+Grid: 50x50, Time: 500 steps, Bonus: 100
+Generating initial greedy assignment...
+Generating initial nearest assignment...
+
+Greedy provided the initial best score.
+
+--- Dynamic SA Parameters ---
+Iterations:   2000
+Initial Temp: 1000.0
+Cooling Rate: 0.995405
+-----------------------------
+
+Starting Simulated Annealing (Initial Score: 1255)
+Iteration 798: New Best Score -> 1329
+Iteration 805: New Best Score -> 1331
+Iteration 937: New Best Score -> 1353
+Iteration 1000: New Best Score -> 1403
+Iteration 1043: New Best Score -> 1533
+Iteration 1211: New Best Score -> 1553
+Iteration 1672: New Best Score -> 1555
+Finished Simulated Annealing. Final Best Score: 1555
+
+Assignment: annealing solver
+Total score: 1555
+  Vehicle 0: 6 rides, score: 634
+  Vehicle 1: 5 rides, score: 445
+  Vehicle 2: 4 rides, score: 476
+
+Solution written to output/medium_annealing.txt
+
+========================================
+NEW RUN: 2026-03-23 10:49:37
+DATASET: input/medium.txt
+========================================
+Parsed: 15 rides, 3 vehicles
+Grid: 50x50, Time: 500 steps, Bonus: 100
+Generating initial greedy assignment...
+Generating initial nearest assignment...
+
+Greedy provided the initial best score.
+
+--- Dynamic SA Parameters ---
+Iterations:   2000
+Initial Temp: 1000.0
+Cooling Rate: 0.995405
+-----------------------------
+
+Starting Simulated Annealing (Initial Score: 1255)
+Iteration 1: New Best Score -> 1355
+Iteration 961: New Best Score -> 1395
+Iteration 1008: New Best Score -> 1515
+Iteration 1018: New Best Score -> 1540
+Iteration 1062: New Best Score -> 1545
+Iteration 1136: New Best Score -> 1555
+
+Finished Simulated Annealing. Final Best Score: 1555
+Score grew by 23.90% from 1255 to 1555
+
+Assignment: annealing solver
+Total score: 1555
+  Vehicle 0: 4 rides, score: 570
+  Vehicle 1: 6 rides, score: 465
+  Vehicle 2: 5 rides, score: 520
+
+Solution written to output/medium_annealing.txt
+
