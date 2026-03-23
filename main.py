@@ -11,6 +11,7 @@ import os
 
 from src.parser import parse_input
 from src.solver import greedy_solver, nearest_vehicle_solver, simulated_annealing_solver
+from src.multi_agent_solver import multiagent_solver
 from src.simulator import simulate_assignment, validate_assignment
 from src.writer import write_solution
 
@@ -32,7 +33,7 @@ class DualLogger:
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python main.py <input_file> <output_file> [greedy|nearest|annealing]")
+        print("Usage: python main.py <input_file> <output_file> [greedy|nearest|annealing|multiagent]")
         sys.exit(1)
 
     # Grab the arguments
@@ -66,6 +67,8 @@ def main():
     elif solver_name == "annealing":
         from src.solver import simulated_annealing_solver
         assignment = simulated_annealing_solver(problem)
+    elif solver_name == "multiagent":
+        assignment = multiagent_solver(problem)
     else:
         assignment = greedy_solver(problem)
 
