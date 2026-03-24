@@ -10,8 +10,10 @@ import datetime
 import os
 
 from src.parser import parse_input
-from src.solver import greedy_solver, nearest_vehicle_solver, simulated_annealing_solver
-from src.multi_agent_solver import multiagent_solver
+from src.solvers.greedy_solver import greedy_solver
+from src.solvers.nearest_solver import nearest_vehicle_solver
+from src.solvers.multiagent_solver import multiagent_solver
+from src.solvers.simulated_annealing_solver import simulated_annealing_solver
 from src.simulator import simulate_assignment, validate_assignment
 from src.writer import write_solution
 
@@ -65,7 +67,6 @@ def main():
     if solver_name == "nearest":
         assignment = nearest_vehicle_solver(problem)
     elif solver_name == "annealing":
-        from src.solver import simulated_annealing_solver
         assignment = simulated_annealing_solver(problem)
     elif solver_name == "multiagent":
         assignment = multiagent_solver(problem)

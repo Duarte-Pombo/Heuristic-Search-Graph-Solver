@@ -1,0 +1,7 @@
+multi agent
+
+logs para aquisição de conhecimento
+
+greedy cold consider cathing bonuses
+
+
