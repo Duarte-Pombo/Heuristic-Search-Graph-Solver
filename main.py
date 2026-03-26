@@ -13,6 +13,8 @@ from src.parser import parse_input
 from src.solvers.greedy_solver import greedy_solver
 from src.solvers.nearest_solver import nearest_vehicle_solver
 from src.solvers.multiagent_solver import multiagent_solver
+from src.solvers.genetic_solver import genetic_solver
+from src.solvers.backtracking_solver import backtracking_solver
 from src.solvers.simulated_annealing_solver import simulated_annealing_solver
 from src.simulator import simulate_assignment, validate_assignment
 from src.writer import write_solution
@@ -35,7 +37,7 @@ class DualLogger:
 
 def main():
     if len(sys.argv) < 3:
-        print("Usage: python main.py <input_file> <output_file> [greedy|nearest|annealing|multiagent]")
+        print("Usage: python main.py <input_file> <output_file> [greedy|nearest|annealing|multiagent|genetic|backtracking]")
         sys.exit(1)
 
     # Grab the arguments
@@ -70,6 +72,10 @@ def main():
         assignment = simulated_annealing_solver(problem)
     elif solver_name == "multiagent":
         assignment = multiagent_solver(problem)
+    elif solver_name == "genetic" :
+        assignment = genetic_solver(problem)
+    elif solver_name == "backtracking" :
+        assignment = backtracking_solver() # experimental algorithm, might not work
     else:
         assignment = greedy_solver(problem)
 
