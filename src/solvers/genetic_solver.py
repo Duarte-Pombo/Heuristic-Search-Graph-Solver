@@ -151,12 +151,13 @@ def ox1_crossover(perm_a, perm_b):
     return build(perm_a, perm_b), build(perm_b, perm_a)
 
 def cuts_crossover(cuts_a, cuts_b):
-    c1 = [a if random.random() < 0.5 else b for a, b in zip(cuts_a, cuts_b)]
-    c2 = [b if random.random() < 0.5 else a for a, b in zip(cuts_a, cuts_b)]
+    t = random.random()
+    c1 = sorted(int(round(t * a + (1 - t) * b)) for a, b in zip(cuts_a, cuts_b))
+    t2 = random.random()
+    c2 = sorted(int(round(t2 * b + (1 - t2) * a)) for a, b in zip(cuts_a, cuts_b))
     return c1, c2
 
 # CHROMOSSOME MUTATION
-
 def mutate(rides_permutation, cuts, num_rides, mutation_rate=0.05):
     perm = list(rides_permutation)
     cuts = list(cuts)
